@@ -8,19 +8,22 @@ def extract_info(input_file, output_file):
     name_email = []
 
     for info in information:
-        name = info.get('title', 'no name found')
+        name = info.get('title')
 
-        contact_details = info.get('contactDetails', {})
-        emails = contact_details.get('emails', ['no emails found'])
+        # Check if name is found
+        if name:
+            contact_details = info.get('contactDetails', {})
+            emails = contact_details.get('emails', [])
 
-        for email in emails:
-            name_email.append([name, email])
+            # Write only if there is at least one email
+            if emails:
+                for email in emails:
+                    name_email.append([name, email])
 
     with open(output_file, 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(['Name', 'Email'])  # Writing the header
         writer.writerows(name_email)
-
 
 input_file = 'info.json'
 output_file = 'emails.csv'
